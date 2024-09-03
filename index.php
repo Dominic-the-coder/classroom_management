@@ -1,4 +1,8 @@
 <?php
+
+// start session
+session_start();
+
 // backend code
 
 // 1.collect data base info
@@ -46,6 +50,9 @@ $students = $query->fetchAll();
     <div class="card rounded shadow-sm mx-auto my-4" style="max-width: 500px">
       <div class="card-body">
         <h3 class="card-title mb-3">My Classroom</h3>
+        <?php if ( isset( $_SESSION['user'] ) ) : ?>
+        <h4>Welcome Back! <?= $_SESSION['user']['name']; ?></h4>
+        <a href="logout.php">Logout</a>
         <form method="POST" action="add_students.php">
           <div class="mt-4 d-flex justify-content-between align-items-center">
             <input
@@ -59,7 +66,11 @@ $students = $query->fetchAll();
         </form>
       </div>
     </div>
-
+    <?php else : ?>
+       <a href="login.php">Login</a>
+       <a href="signup.php">Sign Up</a>
+    <?php endif; ?>
+    <?php if ( isset( $_SESSION['user'] ) ) : ?>
     <div class="card rounded shadow-sm mx-auto my-4" style="max-width: 500px">
       <div class="card-body">
         <h3 class="card-title mb-3">Students</h3>
@@ -96,6 +107,7 @@ $students = $query->fetchAll();
 
       </div>
     </div>
+    <?php endif; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>
