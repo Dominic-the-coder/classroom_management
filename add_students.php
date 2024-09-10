@@ -13,7 +13,7 @@
     $database_password 
     );
 
-    $name = $_POST["student_name"];
+    $name = $_POST["simplecms"];
 
     // 1. check whether the user insert a name
         if(empty( $name ) ){
