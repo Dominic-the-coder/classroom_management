@@ -21,11 +21,11 @@ $confirm_password = $_POST['confirm_password'];
 
 // 4. check for error (make sure all fields are filled)
 if ( empty($name) || empty( $email ) || empty( $password ) || empty( $confirm_password ) ) {
-   echo "All the fields are required";
+   setError ("All the fields are required", '/login' );
 }else if ( $password !== $confirm_password ) {
-    echo "the password is not match";
+    setError ("the password is not match", '/login' );
 }else if ( strlen($password) < 8 ) { // check for the password length (make sure it's at least 8 characters)
-    echo "Your password must be at least 8 characters";
+    setError ("Your password must be at least 8 characters", '/login' );
 }else {
     // 5. create a user account
     //sql command

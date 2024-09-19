@@ -31,6 +31,6 @@
             'id' => $id
         ]);
         // redirect
-        header("Location: index.php");
+        header("Location: /");
         exit;
     }

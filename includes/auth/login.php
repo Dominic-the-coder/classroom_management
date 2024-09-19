@@ -47,10 +47,10 @@ if ( empty( $email ) || empty( $password ) ) {
             header("Location: index.php");
                 exit;
         } else {
-            echo "The password provided is incorrect";   
+            setError ("The password provided is incorrect", '/login' );   
         }   
     } else {
-        echo 'The email provided does not exist';
+        setError ('The email provided does not exist', '/login' );
     }
     
 }    

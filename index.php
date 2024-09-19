@@ -1,114 +1,58 @@
 <?php
 
-// start session
-session_start();
+  session_start();
 
-// backend code
+  require 'includes/functions.php';
 
-// 1.collect data base info
-$host = "localhost";
-$database_name = "classroom_management"; // connect to which database
-$database_user = "root";
-$database_password = "password";
+  // load the class files
+  require 'includes/class-auth.php';
+  require 'includes/class-student.php';
 
-// 2. connect to database 
-$database = new PDO(
-  "mysql:host=$host;dbname=$database_name",
-  $database_user,
-  $database_password 
-);
+  // initiatise the classes
+  $auth = new Auth();
+  $student = new Student();
 
-// 3. get students data from the database
-// 3.1 - SQL command
-$sql = "SELECT * FROM students";
-// 3.2 - prepare SQL query
-$query = $database->prepare($sql);
-// 3.3 - execute SQL query
-$query->execute();
-// 3.4 - fetch all the results
-$students = $query->fetchAll();
+  //figure out the url the user is visiting
+  $path = $_SERVER["REQUEST_URI"];
+  // remove all the query strings(remove ? from edit)
+  $path = parse_url($path, PHP_URL_PATH);
+
+  switch ($path) {
+    // Pages
+    case '/login':
+      require 'pages/login.php';
+      break;
+    case '/signup':
+      require 'pages/signup.php';
+      break;
+
+      case'/logout';
+      require 'pages/logout.php';
+      break;
+
+    // Student
+    case '/student/add':
+      require 'includes/student/add.php';
+      break;
+    case '/student/edit':
+      require 'includes/student/edit.php';
+      break;
+    case '/student/delete':
+      require 'includes/student/delete.php';
+      break;
+
+    // Auth
+    case '/auth/login':
+      $auth->login();
+      break;
+    case '/auth/signup':
+      $auth->signup();
+      break;
+      
+    // Default
+    default:
+      require 'pages/home.php';
+      break;
+  }
+
 ?>
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Classroom Management</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css"
-    />
-    <style type="text/css">
-      body {
-        background: #f1f1f1;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="card rounded shadow-sm mx-auto my-4" style="max-width: 500px">
-      <div class="card-body">
-        <h3 class="card-title mb-3">My Classroom</h3>
-        <?php if ( isset( $_SESSION['user'] ) ) : ?>
-        <h4>Welcome Back! <?= $_SESSION['user']['name']; ?></h4>
-        <a href="logout.php">Logout</a>
-        <form method="POST" action="add_students.php">
-          <div class="mt-4 d-flex justify-content-between align-items-center">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Add new student..."
-              name="student_name"
-            />
-            <button class="btn btn-primary btn-sm rounded ms-2">Add</button>
-          </div>
-        </form>
-      </div>
-    </div>
-    <?php else : ?>
-       <a href="login.php">Login</a>
-       <a href="signup.php">Sign Up</a>
-    <?php endif; ?>
-    <?php if ( isset( $_SESSION['user'] ) ) : ?>
-    <div class="card rounded shadow-sm mx-auto my-4" style="max-width: 500px">
-      <div class="card-body">
-        <h3 class="card-title mb-3">Students</h3>
-        <?php
-           // foreach ($students as $index => $student){
-             // echo '<div class="d-flex justify-content-between align-items-center mt-3">
-          //<h5 class="mb-0">' . $index+1 . '. ' . $student['name'] . '</h5>
-        //</div>';
-          //  }
-        ?>
-
-         <?php foreach ($students as $index => $student) : ?>
-          <div class="d-flex justify-content-between align-items-center mt-3">
-            <h5 class="mb-0"><?= $index+1; ?>. <?= $student["name"]; ?></h5> 
-            <!-- UPDATE -->
-            <form
-              method="POST"
-              action="update_students.php"
-              >
-              <input type="text" name="student_name" />
-              <input type="hidden" name="student_id" value="<?= $student["id"]; ?>" />
-              <button class="btn btn-success btn-sm">Update</button>
-            </form>
-            <!-- DELETE -->
-            <form
-              method="POST"
-              action="delete_students.php"
-            >
-             <input type="hidden" name="student_id" value="<?= $student["id"]; ?>" />
-             <button class="btn btn-danger btn-sm">Delete</button>
-            </form>
-          </div>
-        <?php endforeach; ?>
-
-      </div>
-    </div>
-    <?php endif; ?>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
-</html>
