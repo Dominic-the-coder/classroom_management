@@ -39,7 +39,7 @@
     </div>
 
     <?php if ( isset( $_SESSION['user'] ) ) : ?>
-      <div class="card rounded shadow-sm mx-auto my-4" style="max-width: 500px">
+      <div class="card rounded shadow-sm mx-auto my-4" style="max-width: 500px">  
         <div class="card-body">
           <h3 class="card-title mb-3">Students</h3>
           <?php foreach ($students as $index => $student) : ?>
